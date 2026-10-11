@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* ==========================================
+   MEDICARE - GLOBAL TEXT VISIBILITY FIX
+   ========================================== */
+
+@layer base {
+
+  /* Default text visibility */
+  body {
+    color: #0f172a;
+  }
+
+  /* Input, textarea and select text */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    color: #0f172a;
+    caret-color: #2563eb;
+  }
+
+  /* Placeholder visibility */
+  input::placeholder,
+  textarea::placeholder {
+    color: #64748b;
+    opacity: 1;
+  }
+
+  /* Disabled fields */
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    color: #475569;
+    opacity: 0.75;
+  }
+
+  /* Form labels */
+  label {
+    color: #334155;
+  }
+
+  /* Selected text */
+  ::selection {
+    background-color: #bfdbfe;
+    color: #0f172a;
+  }
+
+}

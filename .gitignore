@@ -1,0 +1,62 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### OS Junk Files ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+logs/
+
+
+src/main/resources/application.yml
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env*
+!frontend/.env.example
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-secret.properties
+*.pem
+*.key
+
+# Local uploads
+uploads/
