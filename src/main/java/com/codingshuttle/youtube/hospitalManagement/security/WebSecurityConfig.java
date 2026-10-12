@@ -1,7 +1,12 @@
+
 package com.codingshuttle.youtube.hospitalManagement.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -15,9 +20,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codingshuttle.youtube.hospitalManagement.entity.type.PermissionType.APPOINTMENT_DELETE;
@@ -33,10 +37,11 @@ public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    // OAuth2 ko abhi temporarily disable rakha hai.
-    // private final OAuth2SuccessHandler oAuth2SuccessHandler;
-
+    // OAuth2 temporarily disabled
     private final HandlerExceptionResolver handlerExceptionResolver;
+
+    @Value("${app.frontend.url:http://localhost:3000}")
+    private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)
@@ -44,13 +49,12 @@ public class WebSecurityConfig {
 
         httpSecurity
 
-                // REST API + JWT authentication
                 .csrf(csrf -> csrf.disable())
 
-                // Enable CORS configuration defined below
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors ->
+                        cors.configurationSource(corsConfigurationSource())
+                )
 
-                // JWT based application -> no server-side session
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -59,13 +63,15 @@ public class WebSecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Public APIs
+                        // Public endpoints
                         .requestMatchers(
+                                "/health",
+                                "/health/**",
                                 "/public/**",
                                 "/auth/**"
                         ).permitAll()
 
-                        // Allow browser preflight requests
+                        // Browser preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
 
@@ -79,17 +85,20 @@ public class WebSecurityConfig {
                                 USER_MANAGE.name()
                         )
 
-
-
                         // Admin APIs
                         .requestMatchers("/admin/**")
                         .hasRole(ADMIN.name())
 
+                        // Doctor photo access
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/doctors/*/photo"
                         )
-                        .hasAnyRole("DOCTOR", "ADMIN", "PATIENT")
+                        .hasAnyRole(
+                                "DOCTOR",
+                                "ADMIN",
+                                "PATIENT"
+                        )
 
                         // Doctor APIs
                         .requestMatchers("/doctors/**")
@@ -98,21 +107,18 @@ public class WebSecurityConfig {
                                 ADMIN.name()
                         )
 
-                        // Everything else requires authentication
+                        // All other endpoints
                         .anyRequest()
                         .authenticated()
                 )
 
-                // JWT filter
                 .addFilterBefore(
                         jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
 
-
                 .exceptionHandling(exception -> exception
 
-                        // Missing authentication -> 401 Unauthorized
                         .authenticationEntryPoint(
                                 (request, response, authException) -> {
                                     response.sendError(
@@ -122,7 +128,6 @@ public class WebSecurityConfig {
                                 }
                         )
 
-                        // Authenticated but insufficient permission -> 403
                         .accessDeniedHandler(
                                 (request, response, accessDeniedException) -> {
                                     response.sendError(
@@ -133,46 +138,29 @@ public class WebSecurityConfig {
                         )
                 );
 
-
-        /*
-         * OAuth2 Login
-         * Enable later when Google/OAuth credentials are configured.
-         *
-         * .oauth2Login(oAuth2 -> oAuth2
-         *      .failureHandler((request, response, exception) -> {
-         *          log.error(
-         *              "OAuth2 error: {}",
-         *              exception.getMessage()
-         *          );
-         *
-         *          handlerExceptionResolver.resolveException(
-         *              request,
-         *              response,
-         *              null,
-         *              exception
-         *          );
-         *      })
-         *      .successHandler(oAuth2SuccessHandler)
-         * )
-         */
-
         return httpSecurity.build();
     }
 
-    /**
-     * CORS configuration for Next.js frontend.
-     */
+    // CORS for local Next.js and deployed Vercel frontend
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Development frontend
-        configuration.setAllowedOrigins(
-                List.of("http://localhost:3000")
-        );
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:3000");
 
-        // HTTP methods frontend is allowed to call
+        if (frontendUrl != null && !frontendUrl.isBlank()) {
+            String origin = frontendUrl.trim()
+                    .replaceAll("/+$", "");
+
+            if (!allowedOrigins.contains(origin)) {
+                allowedOrigins.add(origin);
+            }
+        }
+
+        configuration.setAllowedOrigins(allowedOrigins);
+
         configuration.setAllowedMethods(
                 List.of(
                         "GET",
@@ -184,7 +172,6 @@ public class WebSecurityConfig {
                 )
         );
 
-        // Request headers
         configuration.setAllowedHeaders(
                 List.of(
                         HttpHeaders.AUTHORIZATION,
@@ -193,21 +180,16 @@ public class WebSecurityConfig {
                 )
         );
 
-        // Headers frontend can read
         configuration.setExposedHeaders(
                 List.of(HttpHeaders.AUTHORIZATION)
         );
 
-        // Keep enabled for future cookie-based authentication support
         configuration.setAllowCredentials(true);
 
-        // Cache browser preflight response
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-
-//        configuration.applyPermitDefaultValues();
 
         source.registerCorsConfiguration(
                 "/**",
@@ -217,6 +199,7 @@ public class WebSecurityConfig {
         return source;
     }
 
+    // Prevent JWT filter from registering twice
     @Bean
     public FilterRegistrationBean<JwtAuthFilter> jwtFilterRegistration(
             JwtAuthFilter jwtAuthFilter) {
