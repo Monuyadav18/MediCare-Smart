@@ -1,92 +1,175 @@
-# MediCare Smart — Hospital Management System
+<div align="center">
 
-A full-stack hospital management application built with **Java, Spring Boot, Spring Security, PostgreSQL, Next.js, React, and TypeScript**. MediCare Smart brings patient booking, doctor schedules, and hospital administration into a role-based web platform.
+# 🏥 MediCare Smart
+### Full-Stack Hospital Management & Smart Appointment System
 
-> **Project status:** Active development. Features and API routes described below reflect the current project modules; verify individual routes and integrations against your local configuration before deploying.
+**Java · Spring Boot · Spring Security · PostgreSQL · Next.js · React · TypeScript**
 
-## Features
+[![Live Website](https://img.shields.io/badge/Live_Website-Vercel-000000?style=for-the-badge&logo=vercel)](https://medi-care-smart.vercel.app/)
+[![Backend API](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://medicare-smart.onrender.com)
+[![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square)](https://www.java.com/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-### Patient Portal
-- Patient registration, login, and profile management
-- Browse doctors and search by specialization
-- Book doctor appointments with available time slots
-- View appointment details and booking history
-- Reschedule appointments and track appointment status
-- Password recovery and reset screens
+**A role-based healthcare platform connecting patients, doctors, and hospital administrators through one integrated web application.**
 
-### Doctor Portal
-- Doctor dashboard with appointment overview
-- View and manage assigned appointments
-- Configure doctor availability and consultation slots
-- Maintain doctor profile information
+[**🌐 Open Live Application**](https://medi-care-smart.vercel.app/) · [**⚙️ Backend Server**](https://medicare-smart.onrender.com) · [**💻 Source Code**](https://github.com/Monuyadav18/MediCare-Smart)
 
-### Admin Portal
-- Admin dashboard with hospital management overview
-- Manage patient records and doctor profiles
+</div>
+
+---
+
+## 📌 Project Overview
+
+**MediCare Smart** is a full-stack hospital management system designed to simplify appointment booking, doctor scheduling, patient records, and administrative operations. The application has separate **Patient**, **Doctor**, and **Admin** portals, secured by JWT authentication and role-based access control.
+
+The frontend is deployed on **Vercel**, and the Spring Boot backend is deployed on **Render**. The doctor appointments and queue page has been tested successfully in both local and deployed environments after resolving a Hibernate lazy-loading issue.
+
+> **Status:** Actively developed and deployed. A working deployment does not imply every workflow or security scenario has completed end-to-end testing. Do not enter real sensitive patient data into a demo without appropriate safeguards.
+
+## 🔗 Live Deployment
+
+| Component | Platform | URL |
+| --- | --- | --- |
+| **Frontend / Web App** | Vercel | https://medi-care-smart.vercel.app/ |
+| **Spring Boot Backend** | Render | https://medicare-smart.onrender.com |
+| **REST API Base URL** | Render | `https://medicare-smart.onrender.com/api/v1` |
+| **Source Repository** | GitHub | https://github.com/Monuyadav18/MediCare-Smart |
+
+> The backend root URL is a service address, **not necessarily a public API documentation page**. Protected API endpoints require authentication. Free or sleeping hosting instances may take extra time to respond to the first request.
+
+## ✨ Features
+
+### 👤 Patient Portal
+
+- Patient sign-up, login, and JWT-authenticated access
+- Dashboard and personal profile management
+- Discover doctors and search by specialization
+- Book appointments using doctor availability and appointment slots
+- View upcoming appointments and appointment history
+- Reschedule appointments and follow appointment statuses
+- Appointment check-in workflow
+- Password recovery and reset functionality
+
+### 🩺 Doctor Portal
+
+- Role-specific dashboard and appointment summary
+- Doctor profile management
+- Manage availability and consultation slots
+- View assigned appointments and appointment details
+- **Appointments & Queue** page with appointment status filters
+- Queue and consultation workflow support
+- Doctor appointment listing tested locally and on the live deployment
+
+### 🛡️ Admin Portal
+
+- Hospital administration dashboard
+- Manage patients and doctors
 - Onboard new doctors
-- Review and manage appointments
+- Manage and review hospital appointments
+- Organize hospital data and operational workflows
 
-### Appointment & Scheduling
-- Dedicated appointment slot entities and services
-- Slot-based booking and doctor availability management
-- Appointment rescheduling and status updates
-- Booking conflict handling
-- Appointment workflow features including check-in (under development/testing)
+### 📅 Smart Appointment & Queue Management
 
-### Core Hospital Modules
-- **Patient management:** Personal and medical profile details
-- **Doctor management:** Specializations, profiles, and departments
-- **Department management:** Organize hospital departments
-- **Insurance management:** Associate insurance information with patients
-- **Security:** JWT authentication, Spring Security, role-based access control, and permission mappings
-- **OAuth2:** Google/GitHub integration support in the backend; configure providers before use
+- Slot-based scheduling and appointment booking
+- Doctor availability management
+- Booking conflict checks
+- Appointment rescheduling
+- Status-based appointment tracking, including **Booked, Confirmed, Checked In, In Queue, In Consultation, Completed, Cancelled, No Show, and Rescheduled**
+- Check-in and queue-related workflows; continue validating full end-to-end transitions
 
-## Technology Stack
+### 🔐 Authentication & Security
+
+- Spring Security with JWT authentication
+- Role-based access for **PATIENT**, **DOCTOR**, and **ADMIN**
+- Permission-based authorization in backend services
+- Password-reset support through configured email service
+- OAuth2 provider integration support (requires provider configuration)
+
+### 🗂️ Additional Hospital Modules
+
+- Patient and doctor management
+- Department management
+- Insurance-related data models
+- Appointment slots and availability
+- Password-reset tokens and authentication providers
+
+## 🛠️ Technology Stack
 
 | Layer | Technologies |
 | --- | --- |
-| Frontend | Next.js (App Router), React, TypeScript, CSS |
-| Backend | Java 21, Spring Boot 3.3.5, Spring Web |
-| Security | Spring Security, JWT, OAuth2, role-based authorization |
-| Persistence | Spring Data JPA, Hibernate |
-| Database | PostgreSQL |
-| Backend utilities | Lombok, ModelMapper |
-| Build & tooling | Maven Wrapper, npm, Git, Qodana |
+| **Frontend** | Next.js (App Router), React, TypeScript, CSS |
+| **Backend** | Java 21, Spring Boot 3.3.5, Spring Web |
+| **Security** | Spring Security, JWT, OAuth2 support, role-based access control |
+| **ORM / Persistence** | Spring Data JPA, Hibernate |
+| **Database** | PostgreSQL |
+| **Backend Utilities** | Lombok, ModelMapper |
+| **Build & Tools** | Maven / Maven Wrapper, npm, Git, Qodana |
+| **Deployment** | Vercel (frontend), Render (backend) |
 
-## Project Structure
+## 🏗️ System Architecture
+
+```text
+                         ┌─────────────────────────┐
+                         │    Patient / Doctor /   │
+                         │      Admin Browser      │
+                         └────────────┬────────────┘
+                                      │ HTTPS
+                         ┌────────────▼────────────┐
+                         │  Next.js + React + TS   │
+                         │        Vercel           │
+                         └────────────┬────────────┘
+                                      │ REST / JSON + JWT
+                         ┌────────────▼────────────┐
+                         │ Java + Spring Boot API  │
+                         │         Render          │
+                         ├─────────────────────────┤
+                         │ Controllers / Services  │
+                         │ Spring Security / JPA   │
+                         └────────────┬────────────┘
+                                      │ JDBC / Hibernate
+                         ┌────────────▼────────────┐
+                         │       PostgreSQL        │
+                         └─────────────────────────┘
+```
+
+## 📁 Project Structure
+
+> This tree summarizes the structure provided for the project. Specific filenames or additional subfolders may vary as development continues.
 
 ```text
 MediCare-Smart/
 ├── frontend/
-│   ├── public/
+│   ├── public/                       # Static assets
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── admin/              # Admin dashboard, doctors, patients, appointments
-│   │   │   ├── doctor/             # Doctor dashboard, availability, profile, appointments
-│   │   │   ├── patient/            # Patient dashboard, doctors, booking, profile, appointments
+│   │   │   ├── admin/                # Admin dashboard and management
+│   │   │   ├── doctor/               # Dashboard, profile, availability, queue
+│   │   │   ├── patient/              # Dashboard, doctors, bookings, profile
 │   │   │   ├── login/
 │   │   │   ├── signup/
 │   │   │   ├── forgot-password/
 │   │   │   └── reset-password/
-│   │   ├── components/             # Shared and role-specific UI components
-│   │   ├── context/                # Authentication context
-│   │   ├── hooks/
-│   │   ├── lib/
-│   │   ├── services/               # API and domain services
-│   │   └── types/                  # TypeScript types
+│   │   ├── components/               # Reusable UI components
+│   │   ├── context/                  # Authentication state
+│   │   ├── hooks/                    # Custom React hooks
+│   │   ├── lib/                      # Helpers and configuration
+│   │   ├── services/                 # API integration
+│   │   └── types/                    # TypeScript definitions
 │   ├── package.json
 │   └── next.config.ts
 ├── src/
 │   ├── main/
 │   │   ├── java/com/codingshuttle/youtube/hospitalManagement/
-│   │   │   ├── config/
-│   │   │   ├── controller/          # REST endpoints
-│   │   │   ├── dto/                 # Request/response models
-│   │   │   ├── entity/              # Domain entities and enums
-│   │   │   ├── repository/          # Spring Data JPA repositories
-│   │   │   ├── security/            # JWT, OAuth2, permissions, auth services
-│   │   │   ├── service/             # Business logic, scheduling, photos
-│   │   │   └── error/               # Exception handling
+│   │   │   ├── config/               # Application configuration
+│   │   │   ├── controller/           # REST API controllers
+│   │   │   ├── dto/                  # Request / response DTOs
+│   │   │   ├── entity/               # JPA entities and enums
+│   │   │   ├── repository/           # Spring Data repositories
+│   │   │   ├── security/             # JWT / OAuth2 / permissions
+│   │   │   ├── service/              # Business logic
+│   │   │   └── error/                # Error handling
 │   │   └── resources/
 │   │       ├── application.properties
 │   │       └── data.sql
@@ -98,163 +181,222 @@ MediCare-Smart/
 └── LICENSE
 ```
 
-## Prerequisites
+## 🚀 Run Locally
 
-- **JDK 21** or compatible JDK configured for the backend
-- **PostgreSQL 12+**
-- **Node.js and npm** compatible with the frontend's `package.json`
-- Git
+### Prerequisites
 
-Maven does not need to be installed globally when using the included Maven Wrapper.
+- **JDK 21** (or a version compatible with the project's Maven configuration)
+- **PostgreSQL**
+- **Node.js and npm** compatible with `frontend/package.json`
+- **Git**
+- Maven is optional if you use the included Maven Wrapper
 
-## Getting Started
-
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Monuyadav18/MediCare-Smart.git
 cd MediCare-Smart
 ```
 
-### 2. Create the database
+### 2. Prepare PostgreSQL
 
-Run in PostgreSQL:
+Create a development database in PostgreSQL, for example:
 
 ```sql
 CREATE DATABASE "hospitalDB";
 ```
 
-Check the exact database name in `src/main/resources/application.properties`; PostgreSQL database names are case-sensitive when quoted.
+Use your **actual** database name in the JDBC connection URL. Avoid pointing local development at your production database.
 
-### 3. Configure backend environment variables
+### 3. Set Backend Environment Variables
 
-The backend uses environment variables for sensitive configuration. **Do not commit real passwords, tokens, or private keys.**
+The Spring Boot application reads sensitive configuration from environment variables. Check `src/main/resources/application.properties` for the full list of required settings.
 
-PowerShell example (replace placeholders with your own values):
+**Windows PowerShell:**
 
 ```powershell
-$env:DB_PASSWORD = "your_postgresql_password"
-$env:JWT_SECRET = "your_secure_random_jwt_secret"
-$env:MAIL_USERNAME = "your_mail_username"
-$env:MAIL_PASSWORD = "your_mail_app_password"
+$env:DB_URL="jdbc:postgresql://localhost:5432/hospitalDB"
+$env:DB_USERNAME="postgres"
+$env:DB_PASSWORD="your_local_postgresql_password"
+$env:JWT_SECRET="your_long_random_jwt_secret"
+$env:MAIL_USERNAME="your_email_address"
+$env:MAIL_PASSWORD="your_email_app_password"
 ```
 
-Review `src/main/resources/application.properties` for the database URL, database username, mail settings, JWT settings, and any additional required environment variables. OAuth2 login requires provider credentials if enabled.
+These are **example values**, not production credentials. Configure any additional required variables (such as OAuth2 credentials or other security settings) according to `application.properties`. Set them in the **same terminal session** where you start Spring Boot.
 
-### 4. Start the Spring Boot backend
+> **Important:** `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and `MAIL_USERNAME` must resolve correctly. Missing placeholders can prevent Spring Boot from starting. Never commit real secrets.
 
-On Windows:
+### 4. Start the Backend
+
+**Windows:**
 
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-On macOS/Linux:
+**macOS / Linux:**
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-By default, the backend is available at `http://localhost:8080`; the API routes use the `/api/v1` prefix.
+Backend (default): `http://localhost:8080`  
+API prefix: `http://localhost:8080/api/v1`
 
-### 5. Start the Next.js frontend
+### 5. Start the Frontend
 
-Open a second terminal:
+Open a **second terminal**:
 
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
-Visit `http://localhost:3000` in your browser. If needed, set the frontend API base URL in `frontend/.env.local`:
+Create `frontend/.env.local`:
 
 ```dotenv
 NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
 ```
 
-`frontend/.env.local` is ignored by Git.
+Then run:
 
-## Application Roles
+```bash
+npm run dev
+```
 
-| Role | Main capabilities |
+Open **http://localhost:3000**.
+
+## 👥 User Roles
+
+| Role | Main Capabilities |
 | --- | --- |
-| **PATIENT** | Manage profile, find doctors, book and reschedule appointments |
-| **DOCTOR** | Manage profile and availability, review appointments |
-| **ADMIN** | Manage doctors, patients, and hospital appointments |
+| **PATIENT** | Profile, doctor search, booking, appointment history, rescheduling, check-in |
+| **DOCTOR** | Profile, availability, assigned appointments, queue and consultation management |
+| **ADMIN** | Hospital overview, patient/doctor management, onboarding, appointments |
 
-The backend uses role and permission mappings, including patient, appointment, user-management, and reporting permissions.
+## 🔌 REST API Overview
 
-## API Overview
+Base path: `/api/v1`
 
-The following routes are examples from the project's API. Check the corresponding controllers for the complete and current endpoint list.
+The following are representative routes from the project's documented modules. Check the controller mappings for the complete endpoint list and method-level authorization.
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `POST` | `/api/v1/auth/signup` | Register a user |
-| `POST` | `/api/v1/auth/login` | Authenticate and receive JWT |
-| `GET` | `/api/v1/public/doctors` | List public doctor information |
-| `GET` | `/api/v1/patients/profile` | View current patient profile |
-| `POST` | `/api/v1/patients/appointments` | Create an appointment |
-| `GET` | `/api/v1/doctors/appointments` | View doctor's appointments |
-| `GET` | `/api/v1/admin/patients` | List patients (admin) |
-| `POST` | `/api/v1/admin/onBoardNewDoctor` | Onboard doctor (admin) |
+| `POST` | `/auth/signup` | User registration |
+| `POST` | `/auth/login` | Login and JWT issuance |
+| `GET` | `/public/doctors` | Browse public doctor information |
+| `GET` | `/patients/profile` | Retrieve patient profile |
+| `POST` | `/patients/appointments` | Book appointment |
+| `GET` | `/doctors/appointments` | Retrieve doctor's appointments (confirm exact mapping in controller) |
+| `GET` | `/admin/patients` | Admin patient list |
+| `POST` | `/admin/onBoardNewDoctor` | Admin doctor onboarding |
 
-Authenticated endpoints typically require:
+Authenticated requests use:
 
 ```http
 Authorization: Bearer <your_jwt_token>
 ```
 
-## Main Data Models
+**Production API base:** `https://medicare-smart.onrender.com/api/v1`
 
-- **User:** Authentication identity, roles, and provider information
-- **Patient:** Personal information, blood group, insurance, and appointments
-- **Doctor:** Professional profile, specialization, and availability
-- **Appointment:** Patient, doctor, consultation time, reason, and status
-- **AppointmentSlot:** Scheduling and slot availability
-- **Department:** Hospital department relationships
-- **Insurance:** Insurance policy information
-- **PasswordResetToken:** Password recovery workflow
+## 🗃️ Core Data Models
 
-## Testing and Quality
+| Model | Responsibility |
+| --- | --- |
+| `User` | Authentication identity, roles and provider information |
+| `Patient` | Patient profile and appointment relationships |
+| `Doctor` | Doctor profile, specialization and availability |
+| `Appointment` | Booking, patient/doctor, timing, reason and status |
+| `AppointmentSlot` | Time-slot scheduling and availability |
+| `Department` | Hospital departments |
+| `Insurance` | Insurance-related information |
+| `PasswordResetToken` | Password recovery flow |
 
-Run backend tests:
+## ☁️ Deployment
+
+### Frontend — Vercel
+
+- **Project:** `medi-care-smart`
+- **Root directory:** `frontend`
+- **Live URL:** https://medi-care-smart.vercel.app/
+- Configure the frontend environment variable:
+
+```dotenv
+NEXT_PUBLIC_API_URL=https://medicare-smart.onrender.com/api/v1
+```
+
+### Backend — Render
+
+- **Service:** `medicare-smart`
+- **Live URL:** https://medicare-smart.onrender.com
+- Configure production PostgreSQL, JWT, mail and other required environment variables in Render's **Environment** settings.
+- Ensure frontend production origin is permitted by the backend's CORS configuration.
+- Deploy new backend commits and verify the service is **Live** before testing the web app.
+
+> Keep production credentials in the hosting provider's environment settings—not in the repository or frontend code.
+
+## 🧪 Testing & Quality
+
+**Backend tests:**
 
 ```powershell
 .\mvnw.cmd test
 ```
 
-Run frontend linting:
+**Frontend lint (if configured in `frontend/package.json`):**
 
 ```bash
 cd frontend
 npm run lint
 ```
 
-The repository also includes `qodana.yaml` for code-quality tooling. Test and lint commands should be run locally before deploying; passing results are not claimed here.
+The repository also includes `qodana.yaml` for code-quality tooling. No automated test coverage or CI pass rate is claimed here.
 
-## Security Notes
+### Recently Verified
 
-- Never commit `.env` files, database credentials, OAuth2 secrets, or JWT signing keys.
-- Set a strong, unique JWT secret in the runtime environment.
-- Review CORS, authentication, authorization, and error handling before production deployment.
-- Use production-ready database migration, email, HTTPS, and secrets management before serving real patient information.
+- [x] Backend starts with correctly configured PostgreSQL and mail environment variables
+- [x] Doctor **Appointments & Queue** page works on `localhost:3000`
+- [x] Doctor **Appointments & Queue** page works on the live Vercel deployment
+- [x] Hibernate lazy-loading failure in the doctor appointment listing resolved
+- [ ] Complete end-to-end regression tests for every appointment status transition
+- [ ] Expand integration and authorization test coverage
 
-## Roadmap
+## 🛣️ Roadmap
 
-- [ ] Complete and validate the appointment check-in workflow
-- [ ] Add comprehensive integration and security tests
-- [ ] Document all API routes and request/response examples
-- [ ] Prepare production deployment for frontend, backend, and PostgreSQL
-- [ ] Add verified application screenshots and demo link
+- [ ] Complete end-to-end validation of booking → check-in → queue → consultation → completion
+- [ ] Add comprehensive integration, authorization and security tests
+- [ ] Document all REST endpoints with request/response examples
+- [ ] Add verified screenshots of the patient, doctor and admin portals
+- [ ] Improve monitoring, error reporting and deployment reliability
+- [ ] Harden production privacy, audit logging and sensitive-data handling
 
-## Development & Attribution
+## 🔒 Security & Privacy
 
-This repository extends an existing MIT-licensed hospital management backend with a **MediCare Smart** full-stack frontend and additional workflows such as role-specific dashboards, doctor availability, appointment slots, rescheduling, and profile management.
+- Never commit `.env` files, database credentials, email passwords, OAuth2 secrets or JWT signing keys.
+- Use HTTPS and restrict CORS to trusted origins.
+- Protect patient and doctor endpoints with appropriate authorization.
+- Use a separate development database for local testing.
+- Review privacy, access logging, backup, migrations and data retention before handling real patient information.
 
-Original copyright and license terms are retained in [LICENSE](LICENSE). The original license notice credits **EternalKnight002 (2025)**. New contributions and enhancements should be distinguished from the original codebase.
+## 👨‍💻 Development & Attribution
 
-## License
+**MediCare Smart** includes a full-stack frontend and extended hospital workflows developed and integrated as part of this project, including role-specific dashboards, scheduling, appointment management, queue workflows and deployment.
 
-Distributed under the **MIT License**. See [LICENSE](LICENSE) for the complete license text and original copyright notice.
+This repository builds on an existing **MIT-licensed hospital management backend**. The original copyright and license terms are preserved in [`LICENSE`](LICENSE), including attribution to **EternalKnight002 (2025)**. The original upstream code and later enhancements should not be represented as having the same authorship.
+
+**Maintained by:** [Monu Yadav](https://github.com/Monuyadav18)
+
+## 📄 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details and original copyright notices.
+
+---
+
+<div align="center">
+
+**Built with Java, Spring Boot, PostgreSQL, Next.js & React.**
+
+[Live Demo](https://medi-care-smart.vercel.app/) · [Backend](https://medicare-smart.onrender.com) · [GitHub](https://github.com/Monuyadav18/MediCare-Smart)
+
+</div>
