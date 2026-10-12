@@ -30,20 +30,6 @@ import type {
 
 type EditableField = keyof UpdateDoctorProfile;
 
-const editableFields: EditableField[] = [
-    "name",
-    "specialization",
-    "phone",
-    "gender",
-    "qualification",
-    "experienceYears",
-    "consultationFee",
-    "hospitalName",
-    "address",
-    "city",
-    "state",
-];
-
 function createForm(profile: DoctorProfileType): UpdateDoctorProfile {
     return {
         name: profile.name,
@@ -117,6 +103,43 @@ function Section({
     );
 }
 
+type FieldProps = {
+    label: string;
+    field: EditableField;
+    type?: string;
+    placeholder?: string;
+    value: string | number | null | undefined;
+    onChange: (field: EditableField, value: string) => void;
+};
+
+function Field({
+                   label,
+                   field,
+                   type = "text",
+                   placeholder,
+                   value,
+                   onChange,
+               }: FieldProps) {
+    return (
+        <label className="block">
+            <span className="mb-2 block text-sm font-semibold text-slate-800">
+                {label}
+            </span>
+
+            <input
+                type={type}
+                min={type === "number" ? 0 : undefined}
+                max={field === "experienceYears" ? 70 : undefined}
+                step={field === "consultationFee" ? "0.01" : undefined}
+                value={value ?? ""}
+                onChange={(event) => onChange(field, event.target.value)}
+                placeholder={placeholder ?? `Enter ${label.toLowerCase()}`}
+                className={inputClass}
+            />
+        </label>
+    );
+}
+
 export default function DoctorProfile() {
     const [profile, setProfile] = useState<DoctorProfileType | null>(null);
     const [form, setForm] = useState<UpdateDoctorProfile | null>(null);
@@ -146,14 +169,16 @@ export default function DoctorProfile() {
 
     const loadProfile = useCallback(async () => {
         try {
-            setLoading(true);
-            setError("");
             const data = await doctorProfileService.getProfile();
+
             setProfile(data);
             setForm(createForm(data));
+            setError("");
         } catch (err) {
             setError(
-                err instanceof Error ? err.message : "Unable to load profile."
+                err instanceof Error
+                    ? err.message
+                    : "Unable to load profile."
             );
         } finally {
             setLoading(false);
@@ -161,39 +186,58 @@ export default function DoctorProfile() {
     }, []);
 
     useEffect(() => {
-        void loadProfile();
-    }, [loadProfile]);
+        let active = true;
+
+        doctorProfileService.getProfile()
+            .then((data) => {
+                if (!active) return;
+
+                setProfile(data);
+                setForm(createForm(data));
+                setError("");
+            })
+            .catch((err) => {
+                if (!active) return;
+
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Unable to load profile."
+                );
+            })
+            .finally(() => {
+                if (active) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            active = false;
+        };
+    }, []);
 
     useEffect(() => {
         const photoUrl = profile?.profileImageUrl;
 
-        if (!photoUrl) {
-            setPhotoSrc(null);
-            setPhotoLoading(false);
-            return;
-        }
+        if (!photoUrl) return;
 
         let active = true;
         let objectUrl: string | null = null;
 
         async function loadPhoto() {
             try {
-                setPhotoLoading(true);
-
                 const blob = await doctorProfileService.getPhotoBlob(photoUrl!);
 
                 if (!active) return;
 
                 objectUrl = URL.createObjectURL(blob);
                 setPhotoSrc(objectUrl);
+                setPhotoLoading(false);
             } catch (err) {
                 if (active) {
                     setPhotoSrc(null);
-                    console.error("Photo loading failed:", err);
-                }
-            } finally {
-                if (active) {
                     setPhotoLoading(false);
+                    console.error("Photo loading failed:", err);
                 }
             }
         }
@@ -358,37 +402,7 @@ export default function DoctorProfile() {
         }
     }
 
-    function Field({
-                       label,
-                       field,
-                       type = "text",
-                       placeholder,
-                   }: {
-        label: string;
-        field: EditableField;
-        type?: string;
-        placeholder?: string;
-    }) {
-        if (!form) return null;
 
-        return (
-            <label className="block">
-        <span className="mb-2 block text-sm font-semibold text-slate-800">
-          {label}
-        </span>
-                <input
-                    type={type}
-                    min={type === "number" ? 0 : undefined}
-                    max={field === "experienceYears" ? 70 : undefined}
-                    step={field === "consultationFee" ? "0.01" : undefined}
-                    value={form[field] ?? ""}
-                    onChange={(event) => changeField(field, event.target.value)}
-                    placeholder={placeholder ?? `Enter ${label.toLowerCase()}`}
-                    className={inputClass}
-                />
-            </label>
-        );
-    }
 
     if (loading) {
         return (
@@ -407,8 +421,10 @@ export default function DoctorProfile() {
                     {error || "Doctor profile unavailable."}
                 </p>
                 <button
-                    onClick={() => void loadProfile()}
-                    className="mt-4 rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700"
+                    onClick={() => {
+                        setLoading(true);
+                        void loadProfile();
+                    }}                    className="mt-4 rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700"
                 >
                     Try Again
                 </button>
@@ -587,8 +603,14 @@ export default function DoctorProfile() {
                         description="Your basic contact details"
                         icon={UserRound}
                     >
-                        <Field label="Full Name" field="name" />
-                        <Field label="Phone Number" field="phone" type="tel" />
+                        <Field
+                            label="Full Name"
+                            field="name"
+                            value={form.name}
+                            onChange={changeField}
+                        />
+                        <Field label="Phone Number" field="phone" type="tel"
+                               value={form.phone} onChange={changeField} />
                         <label className="block">
               <span className="mb-2 block text-sm font-semibold text-slate-800">
                 Gender
@@ -613,10 +635,17 @@ export default function DoctorProfile() {
                         description="Your medical qualifications and practice"
                         icon={BriefcaseMedical}
                     >
-                        <Field label="Specialization" field="specialization" />
-                        <Field label="Qualification" field="qualification" />
-                        <Field label="Experience (Years)" field="experienceYears" type="number" />
-                        <Field label="Consultation Fee (₹)" field="consultationFee" type="number" />
+                        <Field label="Specialization" field="specialization"
+                               value={form.specialization} onChange={changeField} />
+
+                        <Field label="Qualification" field="qualification"
+                               value={form.qualification} onChange={changeField} />
+
+                        <Field label="Experience (Years)" field="experienceYears" type="number"
+                               value={form.experienceYears} onChange={changeField} />
+
+                        <Field label="Consultation Fee (₹)" field="consultationFee" type="number"
+                               value={form.consultationFee} onChange={changeField} />
                         <Info
                             label="Registration Number (Read Only)"
                             value={profile.registrationNumber}
@@ -629,10 +658,17 @@ export default function DoctorProfile() {
                         description="Where patients can find you"
                         icon={Building2}
                     >
-                        <Field label="Hospital Name" field="hospitalName" />
-                        <Field label="Address" field="address" />
-                        <Field label="City" field="city" />
-                        <Field label="State" field="state" />
+                        <Field label="Hospital Name" field="hospitalName"
+                               value={form.hospitalName} onChange={changeField} />
+
+                        <Field label="Address" field="address"
+                               value={form.address} onChange={changeField} />
+
+                        <Field label="City" field="city"
+                               value={form.city} onChange={changeField} />
+
+                        <Field label="State" field="state"
+                               value={form.state} onChange={changeField} />
                     </Section>
 
                     <div className="flex flex-wrap justify-end gap-3 rounded-2xl border border-slate-200 bg-white p-5">
