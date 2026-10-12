@@ -59,6 +59,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             Long userId
     );
 
+    List<Appointment> findByDoctorUserIdOrderByAppointmentTimeDesc(
+            Long doctorId
+    );
+
     @Query("""
             SELECT COALESCE(MAX(a.queueNumber), 0)
             FROM Appointment a

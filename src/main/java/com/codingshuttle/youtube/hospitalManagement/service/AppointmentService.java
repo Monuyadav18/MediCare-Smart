@@ -659,6 +659,7 @@ public class AppointmentService {
         return appointment;
     }
 
+    @Transactional
     @PreAuthorize(
             "hasRole('ADMIN') OR " +
                     "(hasRole('DOCTOR') AND #doctorId == authentication.principal.id)"
@@ -666,20 +667,19 @@ public class AppointmentService {
     public List<AppointmentResponseDto> getAllAppointmentsOfDoctor(
             Long doctorId) {
 
-        Doctor doctor =
-                doctorRepository.findById(doctorId)
-                        .orElseThrow(() ->
-                                new EntityNotFoundException(
-                                        "Doctor not found with ID: "
-                                                + doctorId
-                                )
-                        );
+        if (!doctorRepository.existsById(doctorId)) {
+            throw new EntityNotFoundException(
+                    "Doctor not found with ID: " + doctorId
+            );
+        }
 
-        return doctor.getAppointments()
+        return appointmentRepository
+                .findByDoctorUserIdOrderByAppointmentTimeDesc(doctorId)
                 .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
+
     private AppointmentResponseDto mapToResponse(
             Appointment appointment
     ) {
